@@ -1,0 +1,182 @@
+-- Tabla de Clientes
+CREATE TABLE clientes (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  nombre VARCHAR(255) NOT NULL,
+  correo VARCHAR(255) UNIQUE NOT NULL, -- Cambiado a VARCHAR(255)
+  telefono VARCHAR(15),
+  direccion TEXT
+);
+
+-- Tabla de Categorías de Productos
+CREATE TABLE categorias (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  nombre VARCHAR(255) NOT NULL UNIQUE,
+  descripcion TEXT
+);
+
+-- Tabla de Productos
+CREATE TABLE productos (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  nombre VARCHAR(255) NOT NULL,
+  descripcion TEXT,
+  precio DECIMAL(10, 2) NOT NULL,
+  stock INT NOT NULL,
+  categoria_id BIGINT,
+  FOREIGN KEY (categoria_id) REFERENCES categorias (id)
+);
+
+-- Tabla de Ventas
+CREATE TABLE ventas (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  cliente_id BIGINT,
+  fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  total DECIMAL(10, 2) NOT NULL,
+  FOREIGN KEY (cliente_id) REFERENCES clientes (id)
+);
+
+-- Tabla de Detalle de Ventas
+CREATE TABLE detalle_ventas (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  venta_id BIGINT,
+  producto_id BIGINT,
+  cantidad INT NOT NULL,
+  precio_unitario DECIMAL(10, 2) NOT NULL,
+  FOREIGN KEY (venta_id) REFERENCES ventas (id),
+  FOREIGN KEY (producto_id) REFERENCES productos (id)
+);
+
+-- Tabla de Inventario
+CREATE TABLE inventario (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  producto_id BIGINT,
+  cantidad INT NOT NULL,
+  fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  proveedor_id BIGINT,
+  FOREIGN KEY (producto_id) REFERENCES productos (id),
+  FOREIGN KEY (proveedor_id) REFERENCES proveedores (id)
+);
+
+-- Tabla de Datos Adicionales de Productos
+CREATE TABLE datos_productos (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  producto_id BIGINT,
+  tipo_dato VARCHAR(255),
+  valor_dato TEXT,
+  FOREIGN KEY (producto_id) REFERENCES productos (id)
+);
+
+-- Tabla de Proveedores
+CREATE TABLE proveedores (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  nombre VARCHAR(255) NOT NULL,
+  contacto VARCHAR(255),
+  correo VARCHAR(255) UNIQUE,
+  telefono VARCHAR(15),
+  direccion TEXT
+);
+
+-- Tabla de Roles
+CREATE TABLE roles (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  nombre VARCHAR(255) NOT NULL UNIQUE
+);
+
+-- Tabla de Usuarios
+CREATE TABLE usuarios (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  nombre VARCHAR(255) NOT NULL,
+  correo VARCHAR(255) UNIQUE NOT NULL,
+  contrasena VARCHAR(255) NOT NULL,
+  rol_id BIGINT,
+  FOREIGN KEY (rol_id) REFERENCES roles (id)
+);
+
+-- Tabla de Pagos
+CREATE TABLE pagos (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  venta_id BIGINT,
+  metodo_pago VARCHAR(255) NOT NULL,
+  monto DECIMAL(10, 2) NOT NULL,
+  fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (venta_id) REFERENCES ventas (id)
+);
+
+
+-- DATOS QUE SE VAN A INTRODUCIR --------------------------------
+
+-- Insertar datos en la tabla de Roles
+INSERT INTO roles (nombre) VALUES
+('Administrador'),
+('Vendedor'),
+('Cliente');
+
+-- Insertar datos en la tabla de Proveedores
+INSERT INTO proveedores (nombre, contacto, correo, telefono, direccion) VALUES
+('Smart Clothing Inc.', 'Carlos Rodríguez', 'contacto@smartclothing.com', '555-1001', 'Calle Innovación 1'),
+('Tech Wearables', 'Ana Martínez', 'ana@techwearables.com', '555-2002', 'Avenida Avance 23');
+
+-- Insertar datos en la tabla de Clientes
+INSERT INTO clientes (nombre, correo, telefono, direccion) VALUES
+('Carlos Fernández', 'carlos@gmail.com', '555-1111', 'Calle Principal 1'),
+('Laura Martínez', 'laura@hotmail.com', '555-2222', 'Calle Secundaria 2'),
+('Pedro Sánchez', 'pedro@yahoo.com', '555-3333', 'Avenida Reforma 3');
+
+-- Insertar datos en la tabla de Categorías de Productos
+INSERT INTO categorias (nombre, descripcion) VALUES
+('Ropa Inteligente', 'Prendas de vestir con tecnología integrada para monitoreo de salud y rendimiento'),
+('Dispositivos Inteligentes', 'Smartwatches y accesorios tecnológicos para monitoreo y control');
+
+-- Insertar datos en la tabla de Productos
+INSERT INTO productos (nombre, descripcion, precio, stock, categoria_id) VALUES
+('Playera Inteligente', 'Playera con sensores para monitoreo de temperatura y frecuencia cardíaca', 49.99, 150, 1),
+('Pantalón Inteligente', 'Pantalón con sensores que monitorean la actividad física y postura', 79.99, 120, 1),
+('Smartwatch X1', 'Smartwatch para monitoreo de signos vitales y actividad física', 149.99, 200, 2),
+('Chaqueta Inteligente', 'Chaqueta con calefacción ajustable y monitoreo de temperatura corporal', 129.99, 90, 1);
+
+-- Insertar datos en la tabla de Ventas
+INSERT INTO ventas (cliente_id, total) VALUES
+(1, 199.98),
+(2, 129.99),
+(3, 249.98);
+
+-- Insertar datos en la tabla de Detalle de Ventas
+INSERT INTO detalle_ventas (venta_id, producto_id, cantidad, precio_unitario) VALUES
+(1, 1, 1, 49.99),  -- Venta 1: Playera Inteligente
+(1, 3, 1, 149.99), -- Venta 1: Smartwatch X1
+(2, 4, 1, 129.99), -- Venta 2: Chaqueta Inteligente
+(3, 2, 2, 79.99);  -- Venta 3: Pantalón Inteligente (2)
+
+-- Insertar datos en la tabla de Inventario
+INSERT INTO inventario (producto_id, cantidad, proveedor_id) VALUES
+(1, 150, 1),  -- Producto: Playera Inteligente, Proveedor: Smart Clothing Inc.
+(2, 120, 1),  -- Producto: Pantalón Inteligente, Proveedor: Smart Clothing Inc.
+(3, 200, 2),  -- Producto: Smartwatch X1, Proveedor: Tech Wearables
+(4, 90, 2);   -- Producto: Chaqueta Inteligente, Proveedor: Tech Wearables
+
+-- Insertar datos en la tabla de Datos de Productos
+INSERT INTO datos_productos (producto_id, tipo_dato, valor_dato) VALUES
+(1, 'Tecnología', 'Sensores de frecuencia cardíaca y temperatura'),
+(1, 'Material', 'Algodón inteligente'),
+(2, 'Tecnología', 'Sensores de movimiento y postura'),
+(2, 'Material', 'Spandex y poliéster'),
+(3, 'Conectividad', 'Bluetooth, Monitoreo de actividad'),
+(3, 'Batería', 'Hasta 48 horas de duración'),
+(4, 'Tecnología', 'Calefacción controlada por temperatura corporal'),
+(4, 'Material', 'Nylon impermeable');
+
+-- Insertar datos en la tabla de Usuarios
+INSERT INTO usuarios (nombre, correo, contrasena, rol_id) VALUES
+('Pedro Gómez', 'pedro.gomez@admin.com', 'admin123', 1),
+('Ana Pérez', 'ana.perez@tienda.com', 'vendedor123', 2),
+('Javier Ruiz', 'javier.ruiz@cliente.com', 'cliente123', 3);
+
+-- Insertar datos en la tabla de Pagos
+INSERT INTO pagos (venta_id, metodo_pago, monto) VALUES
+(1, 'Tarjeta de Crédito', 199.98),
+(2, 'Efectivo', 129.99),
+(3, 'Tarjeta de Débito', 249.98);
+
+SELECT p.nombre, i.cantidad
+FROM productos p
+INNER JOIN inventario i ON p.id = i.producto_id
+WHERE p.nombre = 'Playera Inteligente';
