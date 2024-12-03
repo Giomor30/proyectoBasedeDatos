@@ -180,3 +180,30 @@ SELECT p.nombre, i.cantidad
 FROM productos p
 INNER JOIN inventario i ON p.id = i.producto_id
 WHERE p.nombre = 'Playera Inteligente';
+
+Explicación del código:
+Base de datos: Se crea la base de datos tienda_ropa_inteligente y se selecciona para su uso.
+Tablas: Se crean las 11 tablas necesarias para el funcionamiento de la tienda de ropa inteligente.
+Categorías: Para clasificar los productos (como playeras inteligentes, pantalones inteligentes, etc.).
+Proveedores: Almacena la información de los proveedores de los productos.
+Productos: Contiene detalles sobre cada producto, como el nombre, la descripción, el precio, el stock y la categoría.
+Clientes: Almacena los datos de los clientes, como nombre, correo, teléfono y dirección.
+Ventas: Registra las ventas realizadas, asociando a cada venta a un cliente.
+Detalle de Ventas: Relaciona las ventas con los productos comprados, mostrando las cantidades y los precios de cada artículo.
+Inventario: Guarda información sobre el inventario de productos, incluyendo la cantidad disponible y las actualizaciones de inventario.
+Datos Adicionales de Productos: Permite agregar información extra sobre cada producto, como características técnicas específicas.
+Roles: Define los roles de los usuarios (por ejemplo, administrador, vendedor).
+Usuarios: Almacena los datos de los usuarios que gestionan la tienda, asociados con un rol.
+Pagos: Registra la información sobre los pagos realizados por los clientes en cada venta.
+Relación entre tablas:
+Las tablas están interconectadas mediante claves foráneas (FOREIGN KEY), lo que garantiza la integridad referencial y la consistencia de los datos.
+La tabla productos se conecta con la tabla categorias a través de categoria_id.
+La tabla ventas se conecta con la tabla clientes a través de cliente_id.
+La tabla detalle_ventas se conecta con ventas y productos mediante venta_id y producto_id, respectivamente.
+La tabla inventario se conecta con productos y proveedores mediante producto_id y proveedor_id.
+La tabla usuarios se conecta con la tabla roles mediante rol_id.
+
+Qué hacer a continuación:
+Pegar el código en MySQL Workbench: Copia el código y pégalo en MySQL Workbench para ejecutarlo y crear la base de datos y tablas.
+Insertar datos de prueba: Asegúrate de insertar algunos datos de prueba para ver cómo funciona la base de datos y las relaciones entre las tablas.
+Realizar consultas: Puedes probar consultas como las que mencioné antes para obtener información sobre los productos, ventas, inventarios, y más.
